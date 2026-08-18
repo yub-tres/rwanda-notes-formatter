@@ -1,4 +1,0 @@
-flask
-pyairtable
-anthropic
-gunicorn
