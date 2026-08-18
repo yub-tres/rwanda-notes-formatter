@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Notes</title>
+<style>
+  :root {
+    --navy: #1f4e5f;
+    --navy-dark: #163a47;
+    --cream: #f7f5f0;
+    --ink: #222;
+    --gray: #6b6b6b;
+    --border: #dcdcd6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 20px 24px;
+  }
+  header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  header p {
+    margin: 0;
+    font-size: 14px;
+    color: #c9dce4;
+  }
+  main {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy-dark);
+    margin-bottom: 6px;
+    margin-top: 22px;
+  }
+  label:first-of-type { margin-top: 0; }
+  select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+    font-family: inherit;
+  }
+  select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(31,78,95,0.12);
+  }
+  textarea {
+    min-height: 180px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 6px;
+  }
+  button {
+    width: 100%;
+    margin-top: 28px;
+    padding: 15px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:active { background: var(--navy-dark); }
+  .empty-state {
+    margin-top: 40px;
+    padding: 24px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    text-align: center;
+    color: var(--gray);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Meeting Notes</h1>
+    <p>{{ today }} — paste your rough notes, we'll clean them up</p>
+  </header>
+
+  <main>
+    {% if meetings %}
+    <form method="POST" action="/submit">
+      <label for="meeting_id">Which meeting is this for?</label>
+      <select name="meeting_id" id="meeting_id" required>
+        <option value="" disabled selected>Select a meeting from today</option>
+        {% for m in meetings %}
+        <option value="{{ m.id }}">{{ m.label }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="raw_notes">Your notes</label>
+      <textarea name="raw_notes" id="raw_notes" placeholder="Type or paste whatever you jotted down — fragments are fine, no need to write full sentences." required></textarea>
+      <p class="hint">This gets turned into Key Points, Decisions, and Next Steps automatically — write however's fastest for you.</p>
+
+      <button type="submit">Save to Meeting Log</button>
+    </form>
+    {% else %}
+    <div class="empty-state">
+      No meetings found for today yet. If you just had one, check that it's showing up in the Meeting Log first — it may take a few minutes to sync.
+    </div>
+    {% endif %}
+  </main>
+</body>
+</html>
